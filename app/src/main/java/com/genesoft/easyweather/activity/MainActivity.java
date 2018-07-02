@@ -1,6 +1,5 @@
 package com.genesoft.easyweather.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,22 +10,18 @@ import android.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import com.genesoft.easyweather.R;
 import com.genesoft.easyweather.model.WeatherBean;
-import com.genesoft.easyweather.test.GsonTest;
 import com.genesoft.easyweather.util.RetrofitFactory;
 import com.genesoft.easyweather.util.RxScheduler;
-import com.google.gson.Gson;
-
-import static com.genesoft.easyweather.R.id.searchView;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,8 +32,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
 
-    @BindView(searchView)
+    @BindView(R.id.searchView)
     SearchView mSearchView;
+
+    @BindView(R.id.refreshLayout)
+    RefreshLayout mRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +46,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initToolbar();
-
         initDrawerLayout();
-
-//        GsonTest dataSource = new GsonTest();
-//        dataSource.runTest();
-//        WeatherBean data = new Gson().fromJson(dataSource.getResponse().toString(), WeatherBean.class);
+        initRefreshLayout();
 
         RetrofitFactory.getInstance().getRetrofit().getWeather("北京", "5d0ef9815bab88eb4c790460b7e98065")
                 .compose(RxScheduler.<WeatherBean>scheduler())
@@ -80,14 +74,32 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void initToolbar(){
+    private void initRefreshLayout() {
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mRefreshLayout.finishRefresh(2000);
+            }
+        });
+
+        mRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                mRefreshLayout.finishLoadmore(2000);
+            }
+        });
+
+        mRefreshLayout.setRefreshHeader(new BezierRadarHeader(this));
+    }
+
+    private void initToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    private void initDrawerLayout(){
+    private void initDrawerLayout() {
         ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mActionBarDrawerToggle.syncState();
@@ -97,5 +109,4 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setIconified(false);
         mSearchView.onActionViewExpanded();
     }
-
 }
