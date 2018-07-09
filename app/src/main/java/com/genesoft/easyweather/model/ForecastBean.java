@@ -1,13 +1,13 @@
 package com.genesoft.easyweather.model;
 
 
-public class DetailBean {
+public class ForecastBean {
 
     private String key;
 
     private String value;
 
-    public DetailBean(String key, String value) {
+    public ForecastBean(String key, String value) {
         this.key = key;
         this.value = value;
     }

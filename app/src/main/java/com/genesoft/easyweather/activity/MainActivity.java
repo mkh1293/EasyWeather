@@ -1,15 +1,21 @@
 package com.genesoft.easyweather.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -20,11 +26,16 @@ import com.genesoft.easyweather.util.RetrofitFactory;
 import com.genesoft.easyweather.util.RxScheduler;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.lang.ref.WeakReference;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private Unbinder unbinder;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -38,12 +49,32 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.refreshLayout)
     RefreshLayout mRefreshLayout;
 
+    private boolean isExit = false;
+
+    private static class ExitHandler extends Handler {
+
+        private final WeakReference<MainActivity> activityReference;
+
+        public ExitHandler(MainActivity activity) {
+            activityReference = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MainActivity mainActivityRef = activityReference.get();
+            if(mainActivityRef != null) {
+                mainActivityRef.isExit = false;
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         initToolbar();
         initDrawerLayout();
@@ -74,6 +105,28 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(!isExit) {
+                isExit = true;
+                Toast.makeText(getApplicationContext(), "再按一次退出", Toast.LENGTH_SHORT).show();
+                new ExitHandler(this).sendEmptyMessageDelayed(0, 2000);
+            }else {
+                System.exit(0);
+            }
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
     private void initRefreshLayout() {
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -89,14 +142,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mRefreshLayout.setRefreshHeader(new BezierRadarHeader(this));
+        mRefreshLayout.setRefreshHeader(new ClassicsHeader(this));
     }
 
     private void initToolbar() {
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
     }
 
     private void initDrawerLayout() {

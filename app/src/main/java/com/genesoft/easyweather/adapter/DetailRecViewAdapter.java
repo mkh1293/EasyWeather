@@ -10,16 +10,17 @@ import android.widget.TextView;
 import com.genesoft.easyweather.R;
 import com.genesoft.easyweather.model.DetailBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailRecViewAdapter extends RecyclerView.Adapter<DetailRecViewAdapter.ViewHolder>{
+public class DetailRecViewAdapter extends RecyclerView.Adapter<DetailRecViewAdapter.ViewHolder> {
 
     private List<DetailBean> detailDataSource;
 
-    public DetailRecViewAdapter(List<DetailBean> detailBeanList) {
+    public DetailRecViewAdapter(ArrayList<DetailBean> detailBeanList) {
         detailDataSource = detailBeanList;
     }
 
@@ -31,8 +32,8 @@ public class DetailRecViewAdapter extends RecyclerView.Adapter<DetailRecViewAdap
 
     @Override
     public void onBindViewHolder(DetailRecViewAdapter.ViewHolder holder, int position) {
-        holder.detailParam.setText(detailDataSource.get(position).getParam());
-        holder.detailParamValue.setText(detailDataSource.get(position).getValue());
+        holder.detailKey.setText(detailDataSource.get(position).getKey());
+        holder.detailValue.setText(detailDataSource.get(position).getValue());
     }
 
     @Override
@@ -42,11 +43,11 @@ public class DetailRecViewAdapter extends RecyclerView.Adapter<DetailRecViewAdap
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.detail_param)
-        TextView detailParam;
+        @BindView(R.id.detailKey)
+        TextView detailKey;
 
-        @BindView(R.id.detail_param_value)
-        TextView detailParamValue;
+        @BindView(R.id.detailValue)
+        TextView detailValue;
 
         ViewHolder(View view) {
             super(view);

@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardView_detail"
+            android:id="@+id/detailCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
@@ -25,17 +25,17 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/label_detail"
+                    android:id="@+id/detailLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="detail"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView_detail"
+                    android:id="@+id/detailRecyclerView"
                     android:layout_marginTop="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/label_detail">
+                    android:layout_below="@+id/detailLabel">
 
                 </android.support.v7.widget.RecyclerView>
 
@@ -44,7 +44,7 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardView_forecast"
+            android:id="@+id/forecastCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
@@ -59,7 +59,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/label_forecast"
+                    android:id="@+id/forecastLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="forecast"/>
@@ -69,7 +69,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/label_forecast">
+                    android:layout_below="@+id/forecastLabel">
 
                 </android.support.v7.widget.RecyclerView>
 
@@ -78,7 +78,7 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardView_livingIndex"
+            android:id="@+id/livingIndexCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
@@ -93,7 +93,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/label_livingIndex"
+                    android:id="@+id/livingIndexLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="living index"/>
@@ -103,16 +103,13 @@
                     android:layout_marginTop="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/label_livingIndex">
+                    android:layout_below="@+id/livingIndexLabel">
 
                 </android.support.v7.widget.RecyclerView>
 
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
-
-
-
 
     </LinearLayout>
 
